@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body{
+  background-image: url('../src/assets/images/background.jpg');
+  backdrop-filter: blur(10px);
+}
+
+.wrapper {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: repeat(9, 1fr);
+  grid-auto-rows: minmax(100px, auto);
+  grid-template-areas:
+    "sidebar header header header header header header header header"
+    "sidebar main main main main main main main main"
+    "sidebar main main main main main main main main"
+    "sidebar ft ft ft   ft   ft   ft   ft   ft";
+}
+
+
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+  max-width: 500px;
+  width: 100%;
+   box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.container > div {
+  border-radius: 5px;
+  padding: 1em;
+  width: 100%;
+  height: 70%;
+}
+
+.card-login {
+  background: transparent !important; 
+}
+
+.cursor{
+  cursor: pointer;
+  color: red;
+}
+.MuiTableCell-root.MuiTableCell-body{
+  font-weight: bold;
+}
+.MuiTable-root {
+  border: 2px dotted #4b4974;
+}
+.rowCards{
+  display: flex;
+  flex-flow: wrap;
+}
+
+.projectModal{
+  margin: 3em;
+}
+
+.item-a {
+  grid-area: header;
+}
+.item-b {
+  grid-area: main;
+}
+.item-c {
+  grid-area: sidebar;
+}
+
+
+
+.Mui-disabled{
+  color: rgb(131, 128, 125) !important;
+}
+.card{
+  color: #000;
+}
+
+.btn-google{
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+}
+.btn-google:hover{
+  background: rgb(255, 255, 255);
+}
+.footer-login{
+  display: flex;
+    flex-flow: column;
+}
+/* .css-1v5z4dq-MuiPaper-root-MuiCard-root{
+  background-color: transparent;
+} */
