@@ -1,17 +1,6 @@
-import React from "react";
+// ThemeContext.js
+import { createContext } from 'react';
 
-export const ThemeContext = React.createContext();
+const ThemeContext = createContext();
 
-export default ({ children }) => {
-    const [theme, setTheme] = React.useState('dark')
-
-    const defaultContext = {
-        theme,
-        setTheme
-    };
-    return (
-        <ThemeContext.Provider value={defaultContext}>
-            {children}
-        </ThemeContext.Provider>
-    );
-};
+export default ThemeContext;

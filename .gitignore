@@ -4,3 +4,5 @@ build
 package-lock.json
 .env
 .vercel
+config
+/scripts

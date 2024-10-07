@@ -1,10 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body{
-  background-image: url('../src/assets/images/background.jpg');
-  backdrop-filter: blur(10px);
+@fontsource/roboto/300.css';
+@fontsource/roboto/400.css';
+@fontsource/roboto/500.css';
+@fontsource/roboto/700.css';
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
+
 
 .wrapper {
   display: grid;
@@ -40,10 +46,6 @@ body{
   height: 70%;
 }
 
-.card-login {
-  background: transparent !important; 
-}
-
 .cursor{
   cursor: pointer;
   color: red;
@@ -51,9 +53,7 @@ body{
 .MuiTableCell-root.MuiTableCell-body{
   font-weight: bold;
 }
-.MuiTable-root {
-  border: 2px dotted #4b4974;
-}
+
 .rowCards{
   display: flex;
   flex-flow: wrap;
@@ -72,8 +72,6 @@ body{
 .item-c {
   grid-area: sidebar;
 }
-
-
 
 .Mui-disabled{
   color: rgb(131, 128, 125) !important;
@@ -94,6 +92,3 @@ body{
   display: flex;
     flex-flow: column;
 }
-/* .css-1v5z4dq-MuiPaper-root-MuiCard-root{
-  background-color: transparent;
-} */

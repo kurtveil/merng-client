@@ -13,7 +13,6 @@ import Modal from '@mui/material/Modal';
 
 import { DELETE_CLIENT } from '../../mutations/clientMutation';
 import { GET_CLIENTS } from '../../queries/clientQueries';
-import { GET_PROJECTS } from '../../queries/projectQueries';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -45,18 +44,28 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
-  };
+};
 
 export default function ClientRow({ client }) {
-    const handleClose = () => setOpen(false);
-    const [deleteClient] = useMutation(DELETE_CLIENT, {
-        variables: { id: client.id },
-        refetchQueries: [{ query: GET_CLIENTS }, { query: GET_PROJECTS }]
-    }, [handleClose]);
     const [open, setOpen] = React.useState(false);
-    const handleOpen = () => {
-        setOpen(true)
-        };        
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+   
+    const handleDeleteClient = async (client) => {
+        try {
+           await deleteClient({
+                variables: {id: client.id},
+                refetchQueries: [{query: GET_CLIENTS}]
+            })
+        } catch (error) {
+            console.error('Error deleting client:', error);
+            
+        }
+    
+        handleClose()
+    }
+    const [deleteClient] = useMutation(DELETE_CLIENT);
+
     return (
         <>
             <StyledTableRow key={client.id}>
@@ -80,16 +89,16 @@ export default function ClientRow({ client }) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box  className='text-center' sx={style}>
+                <Box className='text-center' sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                      Delete client {client.name}
+                        Delete client {client.name}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                       Are you sure to want delete this client.
+                        Are you sure to want delete this client.
                     </Typography>
-                    <div  className='mt-2 pt-2'>
+                    <div className='mt-2 pt-2'>
 
-                    <Button  variant="contained" onClick={deleteClient}>Delete</Button>
+                        <Button variant="contained" onClick={()=>handleDeleteClient(client)}>Delete</Button>
                     </div>
                 </Box>
             </Modal>

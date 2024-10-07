@@ -7,7 +7,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import IconButton from '@mui/material/IconButton';
 import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 import Avatar from '@mui/material/Avatar';
 import { red, grey } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
@@ -133,14 +132,8 @@ export default function ProjectCard({ project }) {
           title={project?.name}
           subheader="September 14, 2016"
         />
-        {/* <CardMedia
-          component="img"
-          height="194"
-          image="./components/assets/bmthlogo.jpg"
-          alt="Paella dish"
-        /> */}
+       
         <CardContent>
-          {/* <h5>{project.name}</h5> */}
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           </Typography>
           <Typography variant="h5" component="div">

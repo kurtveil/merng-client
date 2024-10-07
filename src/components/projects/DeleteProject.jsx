@@ -20,34 +20,45 @@ const style = {
   p: 4,
 };
 
-export default function DeleteProject({project, isModalDelete}) {
-  const [openProjectModal, setOpenProjectModal] = React.useState(null);
-  // const handleOpen = () => setOpenProjectModal(true);
+export default function DeleteProject({ project, isModalDelete }) {
 
+  const [openProjectModal, setOpenProjectModal] = React.useState(false);
   const handleCloseProjectModal = () => setOpenProjectModal(false);
-    const [deleteProject] = useMutation(DELETE_PROJECT, { 
-        variables: {id:project.id},
-        refetchQueries: [{query: GET_PROJECTS}]
-    }, [handleCloseProjectModal]);
+  const handleDeleteProject = async (project) => {
+   try {
+    await deleteProject({
+      variables: { id: project.id },
+      refetchQueries: [{ query: GET_PROJECTS }]
+    })
+   } catch (error) {
+    console.error('Error deleting client:', error);
+   }
+
+   handleCloseProjectModal();
+  }
+  const [deleteProject] = useMutation(DELETE_PROJECT)
+
+  
+
   return (
     <Modal
-    open={isModalDelete}
-    onClose={handleCloseProjectModal}
-    aria-labelledby="modal-modal-title"
-    aria-describedby="modal-modal-description"
-  >
-    <Box className='text-center' sx={style}>
-      <Typography id="modal-modal-title" variant="h6" component="h2">
-        Delete Project {project.name}
-      </Typography>
-      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-        ¿Are you sure to want delete this project?
-      </Typography>
-      <div className='mt-2 pt-2'>
+      open={isModalDelete}
+      onClose={handleCloseProjectModal}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box className='text-center' sx={style}>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Delete Project {project.name}
+        </Typography>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          ¿Are you sure to want delete this project?
+        </Typography>
+        <div className='mt-2 pt-2'>
 
-        <Button variant="contained" onClick={deleteProject}> <FaTrash className="icon" />Delete</Button>
-      </div>
-    </Box>
-  </Modal>
+          <Button variant="contained" onClick={()=>handleDeleteProject(project)}> <FaTrash className="icon" />Delete</Button>
+        </div>
+      </Box>
+    </Modal>
   )
 }

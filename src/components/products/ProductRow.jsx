@@ -42,30 +42,32 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
-  };
+};
 
-export default function ProductRow({product}) {
+export default function ProductRow({ product }) {
     const [open, setOpen] = React.useState(false);
-    const handleOpen = () => {
-        setOpen(true)
-        };        
+    const [productSelected, setProductSelected] = React.useState({});
+    function handleOpen(product)  {
+        setOpen(true);
+        setProductSelected(product);
+    };
     const handleClose = () => setOpen(false);
 
     const [deleteProduct] = useMutation(DELETE_PRODUCT, {
-        variables: { id: product.id },
-        refetchQueries: [{ query: GET_PRODUCTS }]
-        // update(cache, {data:{deleteClient}}){
-        //     const {clients} = cache.readQuery({
-        //         query:GET_CLIENTS
+        variables: { id: productSelected.id },
+        refetchQueries: [{ query: GET_PRODUCTS }],
+        // update(cache, {data:{deleteProduct}}){
+        //     const {products} = cache.readQuery({
+        //         query:GET_PRODUCTS
         //     });
         //     cache.writeQuery({
-        //         query:GET_CLIENTS,
-        //         data:{clients:clients.filter(client=>client.id !== deleteClient.id)}
+        //         query:GET_PRODUCTS,
+        //         data:{products:products.filter(product=>product.id !== deleteProduct.id)}
         //     });
         // }
-    });
-  return (
-    <>
+    }, [handleClose]);
+    return (
+        <>
             <StyledTableRow key={product.id}>
                 <StyledTableCell component="th" scope="row">
                     {product.id}
@@ -76,7 +78,7 @@ export default function ProductRow({product}) {
                 <StyledTableCell align="right">{product.price}</StyledTableCell>
                 <StyledTableCell align="right">
                     <Tooltip title="Delete client">
-                        <DeleteForeverIcon className='cursor' onClick={handleOpen} />
+                        <DeleteForeverIcon className='cursor' onClick={()=>handleOpen(product)} />
                     </Tooltip>
                 </StyledTableCell>
             </StyledTableRow>
@@ -88,19 +90,19 @@ export default function ProductRow({product}) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box  className='text-center' sx={style}>
+                <Box className='text-center' sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                      Delete client {product.name}
+                        Delete client {productSelected.name}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                       Are you sure to want delete this product.
+                        Are you sure to want delete this product {productSelected.name}
                     </Typography>
-                    <div  className='mt-2 pt-2'>
+                    <div className='mt-2 pt-2'>
 
-                    <Button  variant="contained" onClick={deleteProduct}>Delete</Button>
+                        <Button variant="contained" onClick={deleteProduct}>Delete</Button>
                     </div>
                 </Box>
             </Modal>
         </>
-  )
+    )
 }

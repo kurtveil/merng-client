@@ -12,21 +12,17 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Typography from '@mui/material/Typography';
 import SettingsIcon from '@mui/icons-material/Settings';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Sidebar from './Sidebar';
 import Drawer from '@mui/material/Drawer';
 import MainRoutes from './MainRoutes';
-import { ThemeProvider, createTheme, styled, useTheme } from '@mui/material/styles';
-
+import { ThemeProvider, createTheme, styled } from '@mui/material/styles';
+import SwitchingTheme from './SwitcherTheme';
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
-
 const accountSettings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const drawerWidth = 240;
-
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
@@ -45,28 +41,12 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-
-function SwitchingTheme() {
-    const theme = useTheme();
-    const colorMode = React.useContext(ColorModeContext);
-    return (
-
-        <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
-            {theme.palette.mode === 'dark' ? <LightModeIcon /> : < DarkModeIcon />}
-        </IconButton>
-
-    );
-}
-
-
-
-export default function Header({ logoutChildtoParent, themetoParent }) {
+export default function Header({ logoutChildtoParent }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
     const [open, setOpen] = useState(false);
-
-    const [mode, setMode] = useState("dark");
-    themetoParent(mode)
+    const themeStorage = localStorage.getItem('theme');
+    const [mode, setMode] = useState(themeStorage);
 
     const colorMode = useMemo(
         () => ({
@@ -75,10 +55,9 @@ export default function Header({ logoutChildtoParent, themetoParent }) {
             },
             
         }),
-        [mode],
     );
 
-    const theme = useMemo(
+    const themePreference = useMemo(
         () =>
             createTheme({
                 palette: {
@@ -140,12 +119,9 @@ export default function Header({ logoutChildtoParent, themetoParent }) {
         </Menu>
     );
 
-
-
-
     return (
         <ColorModeContext.Provider value={colorMode}>
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={themePreference}>
                 <div className={` wrapper`}>
                     <CssBaseline />
 
@@ -164,7 +140,7 @@ export default function Header({ logoutChildtoParent, themetoParent }) {
                             <Box sx={{ flexGrow: 1 }} />
                             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
 
-                                <SwitchingTheme />
+                                <SwitchingTheme colorModContxt={ColorModeContext} />
 
 
                                 <IconButton size="large" aria-label="show 4 new mails" >

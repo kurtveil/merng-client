@@ -1,10 +1,7 @@
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
-import * as React from 'react';
+import React from 'react';
 import Login from './components/shared/Login';
-import {
-  Experimental_CssVarsProvider as CssVarsProvider,
-  experimental_extendTheme as extendTheme,
-} from '@mui/material/styles';
+
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -26,17 +23,15 @@ const cache = new InMemoryCache({
 
 
 const client = new ApolloClient({
-  uri: 'https://mrng-server.vercel.app/graphql',
+  uri: 'http://localhost:8000/graphql',
   cache,
   // credentials: true
 });
-const theme = extendTheme();
-delete theme.colorSchemes.light;
 function App() {
 
-
+  
   return (
-    <> 
+    <>
         <ApolloProvider client={client}>
           <Login />
         </ApolloProvider >
