@@ -107,6 +107,7 @@ const theme = useMemo(
             <div style={{width:"50%"}}> <img style={{width:'100%', height:'100%'}} src={background} alt="img-login" /></div>
             <div style={{width:"50%"}}>
               <Card style={{width:'100%', height:'100%'}}>
+              <SwitchingTheme colorModContxt={ColorModeContext}/>
                 <Typography variant='h2' style={styles.text} component="h2" gutterBottom>
                   Projects!
                 </Typography>
@@ -139,7 +140,7 @@ const theme = useMemo(
                       <Button className='m-0' variant="outlined" size='medium' onClick={() => login()}><img src={logo} alt="" width={30} height={30} /></Button>
                     </CardActions>
                   </CardContent>
-                  <SwitchingTheme colorModContxt={ColorModeContext}/>
+                 
                 </div>
               </Card>
            

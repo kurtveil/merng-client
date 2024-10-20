@@ -62,8 +62,8 @@ function Table(props ) {
                             </th>
 
                         <td className="flex items-center px-6 py-4">
-                            <a onClick={()=>handleEditEvent(product, 'edit')}  className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                            <a onClick={()=>handleEditEvent(product, 'delete')}  className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                            <button onClick={()=>handleEditEvent(product, 'edit')}  className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
+                            <button onClick={()=>handleEditEvent(product, 'delete')}  className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</button>
                         </td>
                     </tr>
                         ))}
