@@ -1,22 +1,30 @@
 import React, { useEffect, useState } from 'react'
-import Modal from '../components/shared/Modal';
+// import Modal from '../components/shared/Modal';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import Scanner from '../components/shared/Scanner';
 import Table from '../components/shared/Table';
+import { GET_PRODUCTS } from '../queries/productQueries';
+import { useQuery } from '@apollo/client';
 
 export default function Billing() {
-  const [products, setProducts] = useState();
+  const { loading, error, data } = useQuery(GET_PRODUCTS);
+  const [products, setProducts] = useState([]);
   const [code, setCode] = useState('');
   const [open, setOpen] = useState(true)
-  // const router = useRouter();
   const [product, setProduct] = useState();
 
   const handleScanResult = (result) => {
     if (result && result.codeResult.code) {
       setCode(result.codeResult.code);
-      console.log(code);
-      
-      // fetchPost(result.codeResult.code);
+      setProducts(data.products);
+      const productSelecte = data.products.map((product)=> {
+        if (product.id === result.codeResult.code){
+          console.log(product);
+          
+          return product
+        }
+      });
+      // console.log(productSelecte);
       setOpen(false);
     }
 
@@ -54,7 +62,7 @@ export default function Billing() {
 
                        Registre el producto
                     </DialogTitle>
-                      <Scanner closeModal={handleClose} onDetected={handleScanResult} stopScanner={open} />
+                      <Scanner />
                   </div>
                 </div>
               </div>

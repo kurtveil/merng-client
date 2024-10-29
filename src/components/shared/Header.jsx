@@ -1,61 +1,106 @@
-import React, { useState, useMemo } from 'react';
+import * as React from 'react';
+import { createTheme, styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import CssBaseline from '@mui/material/CssBaseline';
+import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import MenuItem from '@mui/material/MenuItem';
 import MailIcon from '@mui/icons-material/Mail';
-import MuiAppBar from '@mui/material/AppBar';
-import CssBaseline from '@mui/material/CssBaseline';
+import MainRoutes from './MainRoutes';
+import Sidebar from './Sidebar';
+import SwitchingTheme from './SwitcherTheme';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import Typography from '@mui/material/Typography';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
-import Sidebar from './Sidebar';
-import Drawer from '@mui/material/Drawer';
-import MainRoutes from './MainRoutes';
-import { ThemeProvider, createTheme, styled } from '@mui/material/styles';
-import SwitchingTheme from './SwitcherTheme';
+import Menu from '@mui/material/Menu';
+import { useState } from 'react';
+import { ThemeProvider } from '@emotion/react';
+import { useMemo } from 'react';
+const accountSettings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
-const accountSettings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const drawerWidth = 240;
+const menuGeneralId = 'primary-search-general-menu';
+
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+    ({ theme }) => ({
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        marginLeft: `-${drawerWidth}px`,
+        variants: [
+            {
+                props: ({ open }) => open,
+                style: {
+                    transition: theme.transitions.create('margin', {
+                        easing: theme.transitions.easing.easeOut,
+                        duration: theme.transitions.duration.enteringScreen,
+                    }),
+                    marginLeft: 0,
+                },
+            },
+        ],
+    }),
+);
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
+})(({ theme }) => ({
     transition: theme.transitions.create(['margin', 'width'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
     }),
-    ...(open && {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: `${drawerWidth}px`,
-        transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    }),
+    variants: [
+        {
+            props: ({ open }) => open,
+            style: {
+                width: `calc(100% - ${drawerWidth}px)`,
+                marginLeft: `${drawerWidth}px`,
+                transition: theme.transitions.create(['margin', 'width'], {
+                    easing: theme.transitions.easing.easeOut,
+                    duration: theme.transitions.duration.enteringScreen,
+                }),
+            },
+        },
+    ],
+}));
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
 }));
 
 export default function Header({ logoutChildtoParent }) {
+    const theme = useTheme();
+    const [open, setOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
-    const [open, setOpen] = useState(false);
     const themeStorage = localStorage.getItem('theme');
     const [mode, setMode] = useState(themeStorage);
-
-    const colorMode = useMemo(
-        () => ({
-            toggleColorMode: () => {
-                setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
-            },
-            
-        }),
-    );
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
+    const selectSettingMenu = (event, index) => {
+        if (accountSettings[index] === 'Logout') {
+            logoutChildtoParent(true);
+        }
+        handleDrawerClose();
+    };
 
     const themePreference = useMemo(
         () =>
@@ -66,35 +111,16 @@ export default function Header({ logoutChildtoParent }) {
             }),
         [mode],
     );
+    
+    const colorMode = useMemo(
+        () => ({
+            toggleColorMode: () => {
+                setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+            },
+            
+        }),
+    );
 
-
-
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-
-    const sendData = (data) => {
-        setOpen(data);
-    }
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleProfileMenuOpen = (event) => {
-
-        setAnchorEl(event.currentTarget);
-    };
-
-    const selectSettingMenu = (event, index) => {
-        if (accountSettings[index] === 'Logout') {
-            logoutChildtoParent(true);
-        }
-        handleMenuClose();
-    };
-
-    const menuId = 'primary-search-account-menu';
-    const menuGeneralId = 'primary-search-general-menu';
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
@@ -102,14 +128,14 @@ export default function Header({ logoutChildtoParent }) {
                 vertical: 'top',
                 horizontal: 'right',
             }}
-            id={menuId}
+            id={menuGeneralId}
             keepMounted
             transformOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
             }}
             open={isMenuOpen}
-            onClose={handleMenuClose}
+            onClose={handleDrawerClose}
         >
             {accountSettings.map((setting, index) => (
                 <MenuItem key={setting} onClick={(event) => selectSettingMenu(event, index)}>
@@ -118,99 +144,118 @@ export default function Header({ logoutChildtoParent }) {
             ))}
         </Menu>
     );
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
+
+    
+
+    const sendData = (data) => {
+        setOpen(data);
+    }
 
     return (
         <ColorModeContext.Provider value={colorMode}>
+
             <ThemeProvider theme={themePreference}>
-                <div className={` wrapper`}>
-                    <CssBaseline />
 
-                    <AppBar position="fixed" className={` item-a`} open={open}>
-                        <Toolbar>
-                            <IconButton
-                                size="large"
-                                edge="start"
-                                aria-label="menu"
-                                sx={{ mr: 2, ...(open && { display: 'none' }) }}
-                                onClick={handleDrawerOpen}
-                            >
-                                <MenuIcon />
-                            </IconButton>
-                            <h2 >Login</h2>
-                            <Box sx={{ flexGrow: 1 }} />
-                            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-
-                                <SwitchingTheme colorModContxt={ColorModeContext} />
-
-
-                                <IconButton size="large" aria-label="show 4 new mails" >
-                                    <Badge badgeContent={4} color="error">
-                                        <MailIcon />
-                                    </Badge>
-                                </IconButton>
-                                <IconButton
-                                    size="large"
-                                    aria-label="show 17 new notifications"
-
-                                >
-                                    <Badge badgeContent={17} color="error">
-                                        <NotificationsIcon />
-                                    </Badge>
-                                </IconButton>
-                                <IconButton
-                                    size="large"
-                                    edge="end"
-                                    aria-label="show 17 new notifications"
-
-                                    aria-haspopup="true"
-                                    aria-controls={menuGeneralId}
-                                >
-                                    <Badge badgeContent={0} color="error">
-                                        <SettingsIcon />
-                                    </Badge>
-                                </IconButton>
-                                <IconButton
-                                    size="large"
-                                    edge="end"
-                                    aria-label="account of current user"
-                                    aria-controls={menuId}
-                                    aria-haspopup="true"
-                                    color="inherit"
-                                    onClick={handleProfileMenuOpen}
-                                >
-                                    <Tooltip title={`Hi `}>
-                                        <Badge sx={{ p: 0 }}>
-                                            <Avatar alt='' src='' />
-                                        </Badge>
-                                    </Tooltip>
-                                </IconButton>
-                                {renderMenu}
-                            </Box>
-                        </Toolbar>
-                    </AppBar>
-                    <Drawer
-                    
-                        sx={{
-                            width: drawerWidth,
-                            flexShrink: 0,
-                            '& .MuiDrawer-paper': {
-                                width: drawerWidth,
-                                boxSizing: 'border-box',
-                            }
-                        }}
+          
+        <Box sx={{ display: 'flex' }}>
+            <CssBaseline />
+            <AppBar position="fixed" open={open}>
+                <Toolbar>
+                    <IconButton
                         color="inherit"
-                        variant="persistent"
-                        anchor="left"
-                        open={open}
-
+                        aria-label="open drawer"
+                        onClick={handleDrawerOpen}
+                        edge="start"
+                        sx={[
+                            {
+                                mr: 2,
+                            },
+                            open && { display: 'none' },
+                        ]}
                     >
-                        <Sidebar  close={sendData} />
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" noWrap component="div">
+                        Persistent
+                    </Typography>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
 
-                    </Drawer>
-                    <MainRoutes open={open} />
+                        <SwitchingTheme colorModContxt={ColorModeContext} />
 
-                </div>
-            </ThemeProvider>
+
+                        <IconButton size="large" aria-label="show 4 new mails" >
+                            <Badge badgeContent={4} color="error">
+                                <MailIcon />
+                            </Badge>
+                        </IconButton>
+                        <IconButton
+                            size="large"
+                            aria-label="show 17 new notifications"
+
+                        >
+                            <Badge badgeContent={17} color="error">
+                                <NotificationsIcon />
+                            </Badge>
+                        </IconButton>
+                        <IconButton
+                            size="large"
+                            edge="end"
+                            aria-label="show 17 new notifications"
+
+                            aria-haspopup="true"
+                            aria-controls={menuGeneralId}
+                        >
+                            <Badge badgeContent={0} color="error">
+                                <SettingsIcon />
+                            </Badge>
+                        </IconButton>
+                        <IconButton
+                            size="large"
+                            edge="end"
+                            aria-label="account of current user"
+                            aria-controls={menuGeneralId}
+                            aria-haspopup="true"
+                            color="inherit"
+                            onClick={handleDrawerOpen}
+                        >
+                            <Tooltip title={`Hi `}>
+                                <Badge sx={{ p: 0 }}>
+                                    <Avatar alt='' src='' />
+                                </Badge>
+                            </Tooltip>
+                        </IconButton>
+                        {renderMenu}
+                    </Box>
+                </Toolbar>
+            </AppBar>
+            <Drawer
+                sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                        width: drawerWidth,
+                        boxSizing: 'border-box',
+                    },
+                }}
+                variant="persistent"
+                anchor="left"
+                open={open}
+            >
+                <DrawerHeader>
+                    <IconButton onClick={handleDrawerClose}>
+                        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    </IconButton>
+                </DrawerHeader>
+                <Sidebar close={sendData} />
+            </Drawer>
+            <Main open={open} >
+                <MainRoutes  open={open} />
+            </Main>
+        </Box>
+        </ThemeProvider>
         </ColorModeContext.Provider>
     );
 }
