@@ -68,3 +68,9 @@ body {
   display: flex;
     flex-flow: column;
 }
+
+.bg-forest {
+  background-image: url('./components/assets/profile-background.jpg');
+  background-size: cover;
+  background-position: center;
+}

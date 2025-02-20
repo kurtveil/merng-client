@@ -85,7 +85,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-export default function Header({ logoutChildtoParent }) {
+export default function Dashboard({ logoutChildtoParent }) {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -181,7 +181,7 @@ export default function Header({ logoutChildtoParent }) {
                     <Typography variant="h6" noWrap component="div">
                         Persistent
                     </Typography>
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' },justifyContent: 'end', flex:'auto' }} >
 
                         <SwitchingTheme colorModContxt={ColorModeContext} />
 
